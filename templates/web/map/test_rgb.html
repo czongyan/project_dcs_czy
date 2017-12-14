@@ -1,0 +1,72 @@
+<html>
+
+<head>
+    <title></title>
+</head>
+<style type="text/css">
+    .aa {
+        position: relative;
+        width: 120px;
+        height: 100px;
+        color: #008fe4;
+        text-align: center;
+        line-height: 42px;
+        webkit-transition: all .3s linear;
+        transition: all .3s linear;
+    }
+    /*
+    .aa:hover{
+        background-color: transparent;
+        color: #008fe4
+    }
+*/
+    
+    .aa svg {
+        position: absolute;
+        top: -1px;
+        left: -1px;
+        width: 120px;
+        height: 100px
+    }
+    /*
+    .aa svg rect {
+        stroke: #008fe4;
+        stroke-width: 2px;
+        stroke-dashoffset: 0;
+        -webkit-transition: all .9s cubic-bezier(.19,1,.22,1);
+        transition: all .9s cubic-bezier(.19,1,.22,1);
+        stroke-dasharray: 324;
+    }
+    .aa:hover svg rect {
+        stroke: #008fe4;
+        stroke-width: 4px;
+        stroke-dasharray: 90 210;
+        stroke-dashoffset: -175;
+    }
+*/
+</style>
+
+<body>
+    <div class='aa'>
+        <svg><rect x="0" y="0" width="120" height="20" fill="red" stroke='#008fe4' stroke-width='1'></rect>
+        <rect x="0" y="25" width="120" height="20" fill="green" stroke='#008fe4' stroke-width='1'></rect>
+              <rect id="rect-3" x="0" y="50" width="120" height="20" fill="" stroke='#008fe4' stroke-width='1'></rect>
+        </svg>
+    </div>
+<script>
+    function colorMixing(c1,c2)
+    {
+        var r=Math.min(c1.R+c2.R,255);
+        var g=Math.min(c1.G+c2.G,255);
+        var b=Math.min(c1.B+c2.B,255);
+        var 
+    }
+    
+    
+    var rect=Document.getElementById("rect-3");
+    var mix=0.8*(red.to)
+    rect.fill=""
+    </script>
+    </body>
+
+</html>

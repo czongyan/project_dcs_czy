@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title> 利用SVG实现边框效果</title>
+</head>
+<style>
+    .empat {
+        position: relative;
+        overflow: hidden;
+        width: 200px;
+        height: 200px;
+        background-color: #ddd
+    }
+    
+    svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 200px;
+        height: 200px
+    }
+    
+    .empat svg line {
+        stroke-width: 10;
+        stroke: #000;
+        fill: none;
+        stroke-dasharray: 200;
+        -webkit-transition: -webkit-transform .6s ease-out;
+        transition: transform .6s ease-out;
+    }
+    
+    .empat:hover svg line.top {
+        -webkit-transform: translateX(-400px);
+        transform: translateX(-400px);
+    }
+    
+    .empat:hover svg line.left {
+        -webkit-transform: translateY(400px);
+        transform: translateY(400px);
+    }
+    
+    .empat:hover svg line.bottom {
+        -webkit-transform: translateX(400px);
+        transform: translateX(400px);
+    }
+    
+    .empat:hover svg line.right {
+        -webkit-transform: translateY(-400px);
+        transform: translateY(-400px);
+    }
+    /*        测试test动画样式*/
+    #translated-1 {
+        fill: hsl(346.2,100%,32.4%);
+    }
+    #translated {
+        fill: hsl(346.2,100%,32.4%);
+        animation-name: glow-blue;
+        animation-duration: 1s;
+        animation-iteration-count: infinite;
+        animation-timing-function: ease-in-out;
+        animation-direction: alternate;
+    }
+    @keyframes glow-blue {
+        0% {
+            fill: hsl(346.2, 100%, 32.4%);
+        }
+        100% {
+            fill: hsl(346.2, 80%, 63%);
+        }
+    }
+/*
+    
+    -moz-@keyframes glow-blue {
+        0% {
+            fill: hsl(346.2, 80%, 32.4%);
+        }
+        100% {
+            fill: hsl(346.2, 80%, 63%);
+        }
+    }
+    
+    -webkit-@keyframes glow-blue {
+        0% {
+            fill: hsl(346.2, 80%, 32.4%);
+        }
+        100% {
+            fill: hsl(346.2, 80%, 63%);
+        }
+    }
+*/
+</style>
+
+<body>
+        <div class="test">
+        <svg >
+            <rect id="translated-1" x="00",y="20" width="10" height="10"></rect>
+            <rect id="translated-1" x="10",y="20" width="10" height="10"></rect>
+                <rect id="translated-1" x="20",y="20" width="10" height="10"></rect>
+              <rect id="translated" x="30",y="20" width="10" height="10"></rect>
+              <rect id="translated" x="40",y="20" width="10" height="10"></rect>
+            <rect id="translated" x="50",y="20" width="10" height="10"></rect>
+            <rect id="translated" x="60",y="20" width="10" height="10"></rect>
+            <rect id="translated" x="70",y="20" width="10" height="10"></rect>
+            <rect id="translated" x="80",y="20" width="10" height="10"></rect>
+            <rect id="translated" x="90",y="20" width="10" height="10"></rect>
+            <rect id="translated" x="100",y="20" width="10" height="10"></rect>
+              <rect id="translated-1" x="110",y="20" width="10" height="10"></rect>
+              <rect id="translated-1" x="120",y="20" width="10" height="10"></rect>
+            </svg>
+    </div>
+    <div class='empat'>
+        
+        <svg >
+                <line class='top' x1='0' y1='0' x2='600' y2='0'></line>
+                <line class='left' x1='0' y1='200' x2='0' y2='-400'></line>
+                <line class='bottom' x1='-400' y1='200' x2='200' y2='200'></line>
+                <line class='right' x1='200' y1='600' x2='200' y2='0'></line>
+            </svg>
+    </div>
+</body>
+
+</html>```

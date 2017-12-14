@@ -1,0 +1,56 @@
+<html>
+
+<head>
+    <script src='circos.min.js'></script>
+    <!--    <script src="//d3js.org/d3.v3.min.js"></script>-->
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.5.0/d3.js"></script>-->
+    <script src='data.js'></script>
+
+</head>
+
+<body>
+    <div id='chart'></div>
+    <script>
+        var circos = new Circos({
+            container: '#chart',
+            width: 420,
+            height: 420,
+        });
+        //
+        //        
+        //        circos.layout(layout_data, configuration1);
+        //
+        //        var configuration1 = {
+        //            innerRadius: 30,
+        //            outerRadius: 50,
+        //            ticks: {
+        //                display: false
+        //            },
+        //            labels: {
+        //                position: 'center',
+        //                display: true,
+        //                size: 14,
+        //                color: '#000',
+        //                radialOffset: 15,
+        //            },
+        //            events: {}
+        //        }
+        //        circos.render();
+        //        
+        circos.heatmap('my-heatmap', heatmap, configuration);
+        var configuration = {
+            innerRadius: null,
+            outerRadius: null,
+            min: null,
+            max: null,
+            color: 'YlGnBu',
+            logScale: false,
+            tooltipContent: null,
+            events: {}
+        }
+        circos.render();
+    </script>
+
+</body>
+
+</html>

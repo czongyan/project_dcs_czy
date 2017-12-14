@@ -1,0 +1,107 @@
+{
+ "name": "所有参数",
+ "children": [
+  {
+   "name": "对标参数",
+    "id":"arg1",
+   "children": [
+      {"name": "主汽温度", "value":1,"id":"THRTEMP"},
+      {"name": "主汽压力", "value":1,"id": "MSP"},
+      {"name": "一次再热汽压", "value":1,"id": "YRHRPRS"},
+      {"name": "二次再热汽压", "value":1,"id": "RRHRPRS"},
+      {"name": "一次再热温度", "value":1,"id": "YRHRTEMPT"},
+      {"name": "二次再热温度", "value":1,"id": "RRHRTEMPT"},
+      {"name": "给水温度", "value":1,"id": "PAB11CT111"}
+     ]
+    },
+  {
+    "name":"其他参数",
+      "id":"arg2",
+     "children":[
+          {"name":"总煤量","value":2,"id":"TOTALCOAL"},
+          {"name":"总风量","value":2,"id":"TAF"},
+          {"name":"氧量","value":2,"id":"O2"}
+      ]
+  },
+  {
+     "name": "燃烧器摆角",
+      "id":"arg3",
+     "children": [
+      {"name": "AB燃烧器摆角1", "value":3,"id": "HHA11AS111XQ11"},
+      {"name": "AB燃烧器摆角2", "value":3,"id": "HHA12AS111XQ11"},
+      {"name": "AB燃烧器摆角3", "value":3,"id": "HHA13AS111XQ11"},
+      {"name": "AB燃烧器摆角4", "value":3,"id": "HHA14AS111XQ11"},
+      {"name": "CD燃烧器摆角1", "value":4,"id": "HHA31AS111XQ11"},
+      {"name": "CD燃烧器摆角2", "value":4,"id": "HHA32AS111XQ11"},
+      {"name": "CD燃烧器摆角3", "value":4,"id": "HHA33AS111XQ11"},
+      {"name": "CD燃烧器摆角4", "value":4,"id": "HHA34AS111XQ11"},
+      {"name": "EF燃烧器摆角1", "value":5,"id": "HHA51AS111XQ11"},
+      {"name": "EF燃烧器摆角2", "value":5,"id": "HHA52AS111XQ11"},
+      {"name": "EF燃烧器摆角3", "value":5,"id": "HHA53AS111XQ11"},
+      {"name": "EF燃烧器摆角4", "value":5,"id": "HHA54AS111XQ11"}
+     ]
+    },
+  {
+     "name": "AGP燃烧器摆角",
+      "id":"arg4",
+     "children": [
+      {"name": "AGP下燃烧器摆角1", "value":6,"id": "HHA71AS111XQ11"},
+      {"name": "AGP下燃烧器摆角2", "value":6,"id": "HHA72AS111XQ11"},
+      {"name": "AGP下燃烧器摆角3", "value":6,"id": "HHA73AS111XQ11"},
+      {"name": "AGP下燃烧器摆角4", "value":6,"id": "HHA74AS111XQ11"},
+      {"name": "AGP上燃烧器摆角1", "value":7,"id": "HHA81AS111XQ11"},
+      {"name": "AGP上燃烧器摆角2", "value":7,"id": "HHA82AS111XQ11"},
+      {"name": "AGP上燃烧器摆角3", "value":7,"id": "HHA83AS111XQ11"},
+      {"name": "AGP上燃烧器摆角4", "value":7,"id": "HHA84AS111XQ11"}
+     ]
+    },
+  {
+     "name": "再热器烟气挡板",
+      "id":"arg5",
+     "children": [
+      {"name": "一次再热器烟气挡板1", "value":9,"id": "HNA11AA111AXQ11"},
+      {"name": "一次再热器烟气挡板2", "value":9,"id": "HNA11AA111BXQ11"},
+      {"name": "二次再热器烟气挡板1", "value":10,"id": "HNA11AA112AXQ11"},
+      {"name": "二次再热器烟气挡板2", "value":10,"id": "HNA11AA112BXQ11"}
+     ]
+  },
+  {
+     "name": "过热器气动减温器喷水阀",
+      "id":"arg6",
+     "children": [
+      {"name": "过热器一级气动减温器喷水阀1", "value":11,"id": "LAE11CG111XQ11"},
+      {"name": "过热器一级气动减温器喷水阀2", "value":11,"id": "LAE12CG111XQ11"},
+      {"name": "过热器一级气动减温器喷水阀3", "value":11,"id": "LAE13CG111XQ11"},
+      {"name": "过热器一级气动减温器喷水阀4", "value":11,"id": "LAE14CG111XQ11"},
+      {"name": "过热器二级气动减温器喷水阀1", "value":12,"id": "LAE21CG111XQ11"},
+      {"name": "过热器二级气动减温器喷水阀2", "value":12,"id": "LAE22CG111XQ11"},
+      {"name": "过热器二级气动减温器喷水阀3", "value":12,"id": "LAE23CG111XQ11"},
+      {"name": "过热器二级气动减温器喷水阀4", "value":12,"id": "LAE24CG111XQ11"}
+     ]
+  },
+  {
+     "name": "再热器事故喷水气动调节阀",
+      "id":"arg7",
+     "children": [
+      {"name": "一次再热器事故喷水气动调节阀A", "value":13,"id": "LAF11CG111XQ11"},
+      {"name": "一次再热器事故喷水气动调节阀B", "value":13,"id": "LAF11CG111XQ11"},
+      {"name": "二次再热器事故喷水气动调节阀A", "value":14,"id": "LAF21CG111XQ11"},
+      {"name": "二次再热器事故喷水气动调节阀B", "value":14,"id": "LAF22CG111XQ11"}
+     ]
+  },
+  {
+     "name": "再热器微量喷水气动调节阀",
+      "id":"arg8",
+     "children": [
+      {"name": "一次再热器微量喷水气动调节阀A", "value":15,"id": "LAF11CG111XQ11"},
+      {"name": "一次再热器微量喷水气动调节阀B", "value":15,"id": "LAF12CG111XQ11"},
+      {"name": "一次再热器微量喷水气动调节阀C", "value":15,"id": "LAF13CG111XQ11"},
+      {"name": "一次再热器微量喷水气动调节阀D", "value":15,"id": "LAF14CG111XQ11"},
+      {"name": "二次再热器微量喷水气动调节阀A", "value":16,"id": "LAF31CG111XQ11"},
+      {"name": "二次再热器微量喷水气动调节阀B", "value":16,"id": "LAF32CG111XQ11"},
+      {"name": "二次再热器微量喷水气动调节阀C", "value":16,"id": "LAF33CG111XQ11"},
+      {"name": "二次再热器微量喷水气动调节阀D", "value":16,"id": "LAF34CG111XQ11"}
+     ]
+  }
+ ]
+}

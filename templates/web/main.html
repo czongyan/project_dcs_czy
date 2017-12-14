@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width,initial-scale=1">
+    <title>main</title>
+    <style>
+        body {
+            background: #42413C;
+            margin: 0;
+            /*消除body中的留白*/
+            padding: 0;
+            text-align: center;
+        }
+        
+        .container {
+            width: 100%;
+            background: #FFF;
+            margin: 0 auto;
+            /*侧边的自动值与宽度结合使用，可以将布局居中对齐*/
+            text-align: left;
+            overflow: hidden;
+        }
+        
+        .header {
+            padding: 10px 0;
+            background: #ADB96E;
+        }
+        
+        .sidebar {
+            float: left;
+            /*侧边栏居左，改为right可令侧边栏居右*/
+            width: 14%;
+            height: 950px;
+            background: #e8f5e0;
+            float: left;
+            border-right: 1px solid #B6B6B6;
+        }
+        
+        .maincontent {
+            width: 85.5%;
+            height: 950px;
+            background: #eee;
+            float: left;
+            border-right: 1px solid #B6B6B6;
+        }
+        
+        .sidebar_right {
+            float: left;
+            侧边栏居左，改为right可令侧边栏居右
+            width: 9%;
+            height: 950px;
+            background: #eee;
+            float: left;
+        }
+        
+        .footer {
+            clear: both;
+            /*清除前后的浮动元素，使页脚显示在其下方*/
+            position: relative;
+            /*修改IE浏览器中clear无效的bug*/
+            padding: 10px 0;
+            background: #CCC49F;
+        }
+    </style>
+</head>
+
+<body>
+    <content class='container'>
+        <!--        <div style="wid">-->
+        <div class='sidebar'><iframe id="map_mode" frameBorder="0" width="100%" scrolling="yes" height="100%" src='../../sidebar'></iframe></div>
+        <div class='maincontent'><iframe id="auto_mode" frameBorder="0" width="100%" scrolling="yes" height="100%" src='../../auto_org'></iframe></div>
+
+<!--        <div class='sidebar_right'><iframe id="other_mode" frameBorder="0" width="100%" scrolling="yes" height="100%" src='../../sidebar_right'></iframe></div>-->
+        <!--        </div>-->
+    </content>
+    <footer></footer>
+</body>
+
+</html>

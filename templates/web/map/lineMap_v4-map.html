@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charest="utf-8">
+</head>
+<title>线性图</title>
+<style>
+    body {
+        background-color:
+    }
+    
+    .black_overlay {
+        display: none;
+        position: absolute;
+        top: 0%;
+        left: 0%;
+        width: 100%;
+        height: 100%;
+        /*background-color: black;*/
+        z-index: 1001;
+        -moz-opacity: 0.8;
+        /*
+        opacity: .80;
+        filter: alpha(opacity=88);
+*/
+    }
+    
+    .white_content {
+        display: none;
+        position: absolute;
+        top: 25%;
+        left: 15%;
+        width: 35%;
+        height: 35%;
+        padding: 20px;
+        border: 1px solid orange;
+        background-color: #ccc;
+        z-index: 1002;
+        overflow: auto;
+        filter: alpha(Opacity=80);
+        -moz-opacity: 0.8;
+        opacity: 0.8;
+    }
+    
+    <style>.path {
+        stroke-dasharray: 1000;
+        stroke-dashoffset: 1000;
+        animation: dash 5s linear alternate infinite;
+    }
+    
+    @keyframes dash {
+        to {
+            stroke-dashoffset: 0;
+        }
+    }
+</style>
+<style id="seg-style">
+    /*
+    .translated {
+        fill: hsl(346.2, 100%, 32.4%);
+        animation-name: MCR-seg;
+        animation-duration: 1s;
+        animation-iteration-count: infinite;
+        animation-timing-function: ease-in-out;
+        animation-direction: alternate;
+    }
+    
+    @keyframes MCR-seg {
+        0% {
+            fill: hsl(346.2, 100%, 32.4%);
+        }
+        100% {
+            fill: hsl(346.2, 80%, 63%);
+        }
+    }
+*/
+</style>
+<style>
+    /*
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+    
+    .x.axis path {
+        display: none;
+    }
+        .x axis text {
+        font-size: 9px;
+            
+    }
+    .area.above {
+        fill: rgb(252, 141, 89);
+    }
+    
+    .area.below {
+        fill: rgb(145, 207, 96);
+    }
+    
+    .line {
+        fill: none;
+        stroke: #000;
+        stroke-width: 1.5px;
+    }
+    
+*/
+    
+    svg {
+        font: 10px sans-serif;
+    }
+    
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+    
+    .line {
+        fill: none;
+        clip-path: url(#clip); //将多余的超出坐标系范围的线段裁剪掉  
+        stroke: steelblue;
+        stroke-width: 1.5px;
+    }
+    
+    .domain {
+        fill: none;
+        stroke: grey;
+        stroke-width: 1;
+        shape-rendering: crispEdges;
+    }
+</style>
+
+<body>
+    <div>
+        <h3>多维度映射组合图</h3>
+        <div>
+            <p id="describe-div">MCR:&nbsp; <strong id="mwMin">50</strong>%&nbsp; &nbsp; <input id="mwMinness" type="range" min="50" max="90" step="10" value="50">&nbsp;&nbsp;磨煤机: &nbsp;<strong id="coal">5</strong>&nbsp; &nbsp; <input id="coalness" type="range" min="3" max="5" step="1" value="5" onchange="loadData()"> &nbsp;&nbsp; <button id="btnSeg" value="0" type="button">切割</button>
+                <button id="color" value="0" type="button" style="display:none">更改颜色</button><button id="limit" value="0" type="button" style="display:none">更改不显示颜色</button>
+            </p>
+
+        </div>
+    </div>
+
+    <!--
+    <div> <svg width="1000"height="500">
+<path class="path" fill="#FFFFFF" stroke="#000000" stroke-width="4" stroke-miterlimit="10" d="M66.039,133.545c0,0-21-57,18-67s49-4,65,8
+    s30,41,53,27s66,4,58,32s-5,44,18,57s22,46,0,45s-54-40-68-16s-40,88-83,48s11-61-11-80s-79-7-70-41
+    C46.039,146.545,53.039,128.545,66.039,133.545z"></path>
+
+        <polygon points="477,45 480,50 474,50" style="fill:#a50026;"></polygon>
+    </svg></div>
+-->
+    <div style="width:100%;height:100%">
+        <div id="content" style="width:900px;float:left">
+        </div>
+        <div id="light" class="white_content">
+            <svg id="singleDetail" style="width:100%;height:200px;"></svg>
+            <a href="javascript:void(0)" onclick="alertDetail()">点这里关闭本窗口</a>
+        </div>
+        <div id="fade" class="black_overlay"></div>
+        <div id="seg_list" style="width:20px;height:100%;float:left"></div>
+    </div>
+    <script src="../../../static/D3/d3.min.js"></script>
+    <script src="rectMap-v4-map.js"></script>
+    <script src="../../../static/jquery/jquery-3.1.1.min.js"></script>
+    <script>
+        //var flag_class = {{flag_cla3s | tojson}};
+        var selectMap = "MW";
+        var rectObj;
+        var formatDate = d3.time.format("%Y-%m-%d %H:%M:%S").parse;
+        var colorStr = [
+            ["#a6d96a", "#feb24c", "#fc4e2a", "#e31a1c", "#a50026", "#a50026"],
+            ["hsl(87.6,59.4%,63.3%)", "hsl(34.4,98.9%,64.7%)", "hsl(10.3,97.2%,57.6%)", "hsl(359.4,79.4%,49.6%)", "hsl(346.2,100%,32.4%)", "hsl(346.2,100%,32.4%)"],
+            ['#66bd63', '#d9ef8b', '#fee08b', '#fdae61', '#f46d43', '#d73027', "#a50026"],
+            ['#b10026', '#e31a1c', '#fc4e2a', '#fd8d3c', '#feb24c', '#fed976', '#ffffb2']
+        ];
+        var color_test = ["#78c679", "#fe9929", "#fb6a4a"];
+        var limitStr = ["#cae2cb", "#cab2d6", "#fed976"];
+        var parameterName = ['MW', 'MSP', 'THRTEMP'];
+        var parameterColor = [
+            ["#1a9850", "#66bd63", "#a6d96a", "#d9ef8b", "#ffffbf", "#fee08b", "#fdae61", "#f46d43", "#d73027", "#a50026"],
+            ["#b35806", "#f1a340", "#fee0b6", "#d8daeb", "#998ec3", "#542788"],
+            ["#7fc97f", "#beaed4", "#fdc086", "#ffff99", "#386cb0", "#f0027f"]
+        ];
+
+        var allDomain = [];
+        loadData();
+
+        function loadData() {
+            var nom = document.getElementById("coalness").value;
+            document.getElementById("content").innerHTML = "";
+            console.log("segDataBySeason_0_" + nom + ".csv");
+            d3.csv("../../../static/data/seg/segDataBySeason_0_" + nom + "-1.csv", function(error, csv) {
+                if (error || csv.length === 0) alert("数据加载失败！");
+                else {
+                    for (var i = 0; i < csv.length; i++) {
+                        csv[i].index = i;
+                        csv[i].MW = parseInt(csv[i].MW);
+                        csv[i].MWD2 = parseInt(csv[i].MWD2);
+                        csv[i].dateStr = csv[i].date;
+                        csv[i].date = formatDate(csv[i].date);
+                        csv[i].day = csv[i].date.getDate();
+                        csv[i].classFlag = csv[i].date.getFullYear() + "-" + (String(csv[i].date.getMonth() + 1).length > 1 ? (csv[i].date.getMonth() + 1) : "0" + (csv[i].date.getMonth() + 1));
+                        csv[i].MD = csv[i].classFlag + "-" + csv[i].day;
+                    };
+                    var temp_nest = d3.nest().key(function(d) {
+                        return d.MD;
+                    }).entries(csv);
+                    var temp_data=[];
+//                    for(var i=0;i<5;i++){
+//                        temp_data=temp_data.concat(temp_nest[i].values);
+//                    }
+                    for (var i in parameterName) {
+                        var val = parameterName[i];
+                        var domainX = d3.extent(csv, function(d) {
+                            if (val == "MW" || val == "MWD2") {
+                                if (d[val] >= 400) {
+                                    return d[selectMap];
+                                }
+                            } else if (val == "NOM") {
+                                if (d[val] > 2) {
+                                    return d[val];
+                                }
+                            } else {
+                                if (d[val] != 0) {
+                                    return d[val];
+                                }
+                            }
+                        });
+                        allDomain.push(domainX);
+                    }
+                    var csv_nest = d3.nest().key(function(d) {
+                        return d.classFlag;
+                    }).entries(csv);
+                    color_1 = d3.scale.quantize()
+                        .domain([500, 1100])
+                        .range(colorStr[1]);
+                    color = d3.scale.quantize()
+                        .domain(d3.extent(csv, function(d) {
+                            if (selectMap == "MW" || selectMap == "MWD2") {
+                                if (d[selectMap] >= 500) {
+                                    //                        console.log(d[selectMap]);
+                                    return d[selectMap];
+                                }
+                            } else if (selectMap == "NOM") {
+                                if (d[selectMap] > 2) {
+                                    return d[selectMap];
+                                }
+                            } else {
+                                if (d[selectMap] != 0) {
+                                    return d[selectMap];
+                                }
+                            }
+                        }))
+                        .range(["#1a9850", "#66bd63", "#a6d96a", "#d9ef8b", "#ffffbf", "#fee08b", "#fdae61", "#f46d43", "#d73027", "#a50026"]);
+
+                    //绘制色卡
+                    var color_svg = d3.select("#describe-div").append("svg").attr("width", 550).attr("transform", "translate(20,10)").attr("height", 20);
+                    var color_raw_g = color_svg.append("g").attr("transform", "translate(22,0)");
+                    var x = d3.scale.linear()
+                        .domain(d3.extent(csv, function(d) {
+                            if (selectMap == "MW" || selectMap == "MWD2") {
+                                if (d[selectMap] > 400) {
+                                    return d[selectMap];
+                                }
+                            } else if (selectMap == "NOM") {
+                                if (d[selectMap] > 2) {
+                                    return d[selectMap];
+                                }
+                            } else {
+                                if (d[selectMap] != 0) {
+                                    return d[selectMap];
+                                }
+                            }
+                        }))
+                        .range([0, 200]);
+
+                    var splitarr = function(From, To, Count) {
+                        var Step = (To - From) / Count,
+                            R = [From];
+
+                        for (; --Count;) R.push(From += Step)
+                        R.push(To)
+                        return R
+                    };
+
+                    color_raw_g.selectAll("rect")
+                        .data(splitarr(d3.min(x.domain()), d3.max(x.domain()), 10))
+                        .enter()
+                        .append("rect")
+                        .attr("x", function(d) {
+                            return x(d)
+                        })
+                        .attr("height", 10)
+                        .attr("width", 20)
+                        .attr("fill", function(d) {
+                            return color(d);
+                        }).attr("opacity", 0.8);
+                    color_raw_g.append("text")
+                        .attr("transform", "translate(-22,10)")
+                        .attr("font-size", 10)
+                        .text("min");
+                    color_raw_g.append("text")
+                        .attr("transform", "translate(230,10)")
+                        .attr("font-size", 10)
+                        .text("max");
+
+                    rectObj = new rectMap({
+                        nodeID: "content",
+                        selectMap: selectMap,
+                        width: 1300,
+                        height: "auto",
+                        margin: {
+                            top: 0,
+                            right: 30,
+                            left: 0,
+                            bottom: 0
+                        },
+                        mode: 'multi',
+                        segment: false,
+                        color: color,
+                        strokeWidth: 5,
+                        svgInterval: 0,
+                        data: csv,
+                        circleR: 5,
+                        segFlag: "2",
+                        diffY: 0
+                    });
+                    d3.select("#mwMinness").on("change", function() {
+                        d3.select("#mwMin").text(this.value);
+                        d3.select("#btnSeg").style("background-color", "");
+                        changeR(true);
+                    });
+                    d3.select("#coalness").on("change", function() {
+                        d3.select("#coal").text(this.value);
+                        d3.select("#btnSeg").style("background-color", "");
+                        //                        drawSegs(true);
+                    });
+                    d3.select("#color").on("click", function() {
+                        this.value = (parseInt(this.value) + 1) % colorStr.length;
+                        newLoad(true);
+
+                    });
+                    d3.select("#limit").on("click", function() {
+                        this.value = (parseInt(this.value) + 1) % limitStr.length;
+                        changeR(true);
+                    });
+
+                    d3.select('#btnSeg').on("click", function() {
+                        d3.select(this).style("background-color", "#3E8CD0");
+                        drawSeg();
+                    });
+
+                    function changeR() {
+                        var mwMin = parseInt(document.getElementById("mwMin").textContent);
+                        var mwDomain = [];
+                        console.log(mwMin);
+                        switch (mwMin) {
+                            case 60:
+                                mwDomain = [600, 700];
+                                break;
+                            case 70:
+                                mwDomain = [700, 800];
+                                break;
+                            case 80:
+                                mwDomain = [800, 900];
+                                break;
+                            case 90:
+                                mwDomain = [900, 1100];
+                                break;
+                        }
+                        var coal = parseInt(document.getElementById("coal").textContent);
+                        var color_num = parseInt(document.getElementById("color").value);
+                        var limit = parseInt(document.getElementById("limit").value);
+                        color_1.range(colorStr[color_num]);
+                        console.log(mwDomain);
+                        rectObj.__proto__.constructor.reDisplay({
+                            mwDomain: mwDomain,
+                            mwLimit: true,
+                            color_1: color_1,
+                            nomLimit: true,
+                            nom: coal,
+                            segment: false,
+                            resolution: 1,
+                            limitColor: limitStr[limit]
+                        });
+                    }
+
+                    function drawSeg(flag) {
+                        var rangeValue = ["#a6d96a", "#feb24c", "#fc4e2a", "#e31a1c", "#a50026"];
+                        var color_seg_g = color_svg.append("g").attr("transform", "translate(380,0)");
+                        color_seg_g.append("text").attr("transform", "translate(-100,10)")
+                            .attr("font-size", 10).text("工况颜色映射尺卡: ");
+                        color_seg_g.selectAll("rect").data(rangeValue).enter().append("rect").attr("width", 20).attr("height", 10).attr("x", function(d, i) {
+                            return i * 20;
+                        }).attr("y", 0).attr("fill", function(d) {
+                            return d;
+                        });
+
+                        var domainValue = [500, 600, 700, 800, 900, 1100];
+                        color_svg.append("g").attr("transform", "translate(380,20)").selectAll("text").data(domainValue).enter().append("text")
+                            .attr("transform", function(d, i) {
+                                return "translate(" + (i * 20 - 10) + ",0)";
+                            })
+                            .attr("font-size", 10)
+                            .text(function(d) {
+                                return d;
+                            });
+
+
+                        var mwMin = parseInt(document.getElementById("mwMin").textContent);
+                        var mwDomain = [];
+                        switch (mwMin) {
+                            case 60:
+                                mwDomain = [600, 700];
+                                break;
+                            case 70:
+                                mwDomain = [700, 800];
+                                break;
+                            case 80:
+                                mwDomain = [800, 900];
+                                break;
+                            case 90:
+                                mwDomain = [900, 1100];
+                                break;
+                        }
+                        var coal = parseInt(document.getElementById("coal").textContent);
+                        var color_num = parseInt(document.getElementById("color").value);
+                        var limit = parseInt(document.getElementById("limit").value);
+                        color_1.range(colorStr[color_num]);
+                        console.log(mwDomain);
+                        $.getJSON("../../../static/data/seg/modeBySeasonSet_0_" + coal + ".json", function(json) {
+                            if (json == null || json == "") alert("数据加载失败！");
+                            //稳定工况段
+                            $.getJSON("../../../static/data/date/season_0_" + coal + "_2.json", function(date_json) {
+                                if (date_json == null || date_json == "") alert("数据加载失败！");
+                                console.log(date_json.seg_detail);
+                                rectObj.__proto__.constructor.segList({
+                                    mwDomain: mwDomain,
+                                    mwLimit: true,
+                                    color_1: color_1,
+                                    nomLimit: true,
+                                    nom: coal,
+                                    segment: true,
+                                    resolution: 1,
+                                    limitColor: limitStr[limit],
+                                    segFlag: json.seg_detail,
+                                    segDate: date_json.seg_detail,
+                                    color_test: colorStr[1],
+                                });
+                            });
+                        });
+                    }
+
+
+                    function newLoad(flag) {
+                        var mwMin = parseInt(document.getElementById("mwMin").textContent);
+                        var mwDomain = [];
+                        console.log(mwMin);
+                        switch (mwMin) {
+                            case 60:
+                                mwDomain = [600, 700];
+                                break;
+                            case 70:
+                                mwDomain = [700, 800];
+                                break;
+                            case 80:
+                                mwDomain = [800, 900];
+                                break;
+                            case 90:
+                                mwDomain = [900, 1100];
+                                break;
+                        }
+                        var coal = parseInt(document.getElementById("coal").textContent);
+                        var color_num = parseInt(document.getElementById("color").value);
+                        var limit = parseInt(document.getElementById("limit").value);
+                        color_1.range(colorStr[color_num]);
+                        console.log(mwDomain);
+                        d3.csv("../../../static/data/seg/modeBySeasonSet_0_" + coal + ".json", function(json) {
+                            if (json == null || json == "") alert("数据加载失败！");
+                            rectObj.__proto__.constructor.segList({
+                                mwDomain: mwDomain,
+                                mwLimit: true,
+                                color_1: color_1,
+                                nomLimit: true,
+                                nom: coal,
+                                segment: true,
+                                resolution: 1,
+                                limitColor: limitStr[limit],
+                                segFlag: json.seg_detail,
+                                color_test: color_test
+                            });
+                        });
+                    }
+
+                    function getAllMode() {
+                        var mwMin = parseInt(document.getElementById("mwMin").textContent);
+                        var mwMax = parseInt(document.getElementById("mwMax").textContent);
+                        var coal = parseInt(document.getElementById("coal").textContent);
+                        $.ajax({
+                            url: '/get_allModeBySeason',
+                            type: 'GET',
+                            data: {
+                                seasonClass: flag_class,
+                                mwMin: mwMin,
+                                mwMax: mwMax,
+                                nom: coal
+                            },
+                            success: function(args) {
+                                rectObj.__proto__.constructor.reDisplay({
+                                    mwDomain: [mwMin, mwMax],
+                                    mwLimit: true,
+                                    color_1: color_1,
+                                    nomLimit: true,
+                                    nom: coal,
+                                    resolution: 5,
+                                    limitColor: limitColor[limit]
+                                });
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
+        function alertDetail() {
+            document.getElementById('light').style.display = 'none';
+            document.getElementById('fade').style.display = 'none';
+            d3.selectAll("polygon").attr("fill", "#ccc");
+        }
+    </script>
+</body>
+
+</html>

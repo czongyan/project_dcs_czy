@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charest="utf-8">
+</head>
+<title>线性图</title>
+<style></style>
+
+<body>
+    <h3>多维度线性组合图</h3>
+    <div><p>功率min:&nbsp; <strong id="mwMin">0</strong>&nbsp; &nbsp; <input id="mwMinness" type="range" min="300" max="1000" step="100" value="0">&nbsp;&nbsp;&nbsp;功率max:&nbsp; <strong id="mwMax">0</strong>&nbsp; &nbsp; <input id="mwMaxness" type="range" min="300" max="1000" step="100" value="0">&nbsp;&nbsp;磨煤机: &nbsp;<strong id="coal">0</strong>&nbsp; &nbsp; <input id="coalness" type="range" min="3" max="5" step="1" value="0"></p>
+    </div>
+    
+    <div style="width:100%;height:100%">
+        <div id="content" style="width:900px;float:left">
+        </div>
+        <div id="seg_list" style="width:20px;height:100%;float:left"></div>
+    </div>
+    <script src="../../../static/D3/d3.min.js"></script>
+    <script src="../../../static/js/rectMap.js"></script>
+    <script src="../../../static/jquery/jquery-3.1.1.min.js"></script>
+    <script>
+        var flag_class = {{flag_class | tojson}};
+        var selectMap = "MW";
+        var rectObj;
+        var formatDate = d3.time.format("%Y-%m-%d %H:%M:%S").parse;
+        d3.csv("../../static/data/season/rawData_" + flag_class + ".csv", function(error, csv) {
+            if (error || csv.length === 0) alert("数据加载失败！");
+            else {
+//                console.log(csv);
+                for (var i = 0; i < csv.length; i++) {
+                    csv[i].MW = parseInt(csv[i].MW);
+                    csv[i].MWD2 = parseInt(csv[i].MWD2);
+                    csv[i].dateStr = csv[i].date;
+                    csv[i].date = formatDate(csv[i].date);
+                    csv[i].day = csv[i].date.getDate();
+                    csv[i].classFlag = csv[i].date.getFullYear() + "-" + (String(csv[i].date.getMonth() + 1).length > 1 ? (csv[i].date.getMonth() + 1) : "0" + (csv[i].date.getMonth() + 1));
+                };
+                var csv_nest = d3.nest().key(function(d) {
+                    return d.classFlag;
+                }).entries(csv);
+                color = d3.scale.quantize()
+                    .domain([0,400,500,600,700,800,900,1000,1100])
+                    .range(["#ccc","#006837", "#1a9850","#a6d96a", "#fee08b", "#fdae61", "#f46d43", "#a50026"]);
+
+//                color = d3.scale.quantize()
+//                    .domain(d3.extent(csv, function(d) {
+//                        if (selectMap == "MW" || selectMap == "MWD2") {
+//                            if (d[selectMap] > 400) {
+//                                //                        console.log(d[selectMap]);
+//                                return d[selectMap];
+//                            }
+//                        } else if (selectMap == "NOM") {
+//                            if (d[selectMap] > 2) {
+//                                return d[selectMap];
+//                            }
+//                        } else {
+//                            if (d[selectMap] != 0) {
+//                                return d[selectMap];
+//                            }
+//                        }
+//                    }))
+//                    .range(["#006837", "#1a9850", "#66bd63", "#a6d96a", "#d9ef8b", "#ffffbf", "#fee08b", "#fdae61", "#f46d43", "#d73027", "#a50026"]);
+                 rectObj = new rectMap({
+                    nodeID: "content",
+                    selectMap: selectMap,
+                    width: 900,
+                    height: "auto",
+                    margin: {
+                        top: 0,
+                        right: 20,
+                        left: 0,
+                        bottom: 0
+                    },
+                    mode: 'multi',
+                    segment: false,
+                    color: color,
+                    storkeWidth: 5,
+                    svgInterval: 0,
+                    data: csv,
+                    circleR: 5,
+                    segFlag: "2"
+                });
+                var select_g=d3.selectAll('g');
+                var arr=[10,330,440,550,660,770,880,990,1100];
+                for(var i in arr){
+                    console.log(color(arr[i]));   
+                }
+                select_g.style('border','1px solid blue;');
+                console.log(rectObj);
+                rectObj.__proto__.constructor.reDisplay();
+                        d3.select("#mwMinness").on("change", function() {
+            d3.select("#mwMin").text(this.value);
+                    console.log(rectObj);
+            rectObj.reDisplay();
+        });
+           d3.select("#mwMaxness").on("change", function() {
+            d3.select("#mwMax").text(this.value);
+        });
+        d3.select("#coalness").on("change", function() {
+            d3.select("#coal").text(this.value);
+        });
+            }
+        });
+        
+        //            console.log(seg_data);
+    </script>
+</body>
+
+</html>
